@@ -1,212 +1,219 @@
-### **Basics of Shell Scripting**
+# Shell Scripting
 
-Shell scripting is a way to automate tasks in Unix/Linux systems by writing a series of commands in a script file. A shell script is executed by a shell, such as **Bash (Bourne Again Shell), Zsh, KornShell (ksh), or Dash**.
+Shell scripting is writing a series of commands in a text file to be executed by a Unix/Linux shell (like Bash, Zsh, or Sh). Instead of typing commands one by one, you can automate tasks by running the script.
 
-## **1. Writing Your First Shell Script**
-### **Steps to Create and Execute a Shell Script**
-1. **Create a script file:**  
-   ```sh
-   nano myscript.sh
-   ```
-2. **Add the shebang (`#!`) at the top:**  
-   ```sh
-   #!/bin/bash
-   echo "Hello, World!"
-   ```
-3. **Save and exit (Ctrl + X → Y → Enter).**
-4. **Give execute permission:**  
-   ```sh
-   chmod +x myscript.sh
-   ```
-5. **Run the script:**  
-   ```sh
-   ./myscript.sh
-   ```
+## Why it’s used:
 
----
+- **Automation:** Repetitive tasks (e.g., backups, file management, deployments).
+- **Task scheduling:** Combined with tools like cron for recurring jobs.
+- **System administration:** Managing servers, installing packages, and configuring environments.
+- **Batch processing:** Running multiple commands or programs sequentially or conditionally.
+- **Scripting pipelines:** Connecting commands and processing text with utilities like `grep`, `awk`, and `sed`.
 
-## **2. Shell Script Basics**
-### **Shebang (`#!`)**
-The first line of a script tells the system which interpreter to use.
-- **Bash:** `#!/bin/bash`
-- **Sh:** `#!/bin/sh`
-- **Python (if needed):** `#!/usr/bin/python3`
+## Shebang
+The shebang (`#!`) at the beginning of a script specifies the interpreter to be used to execute the script.
+For example:
+- `#!/bin/bash` - Uses the Bash shell.
+- `#!/bin/sh` - Uses the system's default shell, which could be `sh`, `dash`, or another shell depending on the OS.
 
-### **Variables**
-Define and use variables without spaces:
-```sh
-name="Alice"
-echo "Hello, $name"
+## Sudo and Su
+- **sudo:** Allows a permitted user to execute a command as the superuser or another user, as specified by the security policy.
+- **su:** Switches to another user, typically the superuser, by prompting for the target user's password.
+
+### Common sudo/su commands:
+1. **Switch to Root User (Login as Root)**: `sudo -i` or `sudo su`
+2. **Run a Single Command as Root**: `sudo command`
+3. **Switch to the Root User Directly**: `su -`
+4. **Check If I have Sudo Access**: `sudo -l`
+5. **Add myself to the sudo Group**: `usermod -aG sudo manjunath_dc`
+
+## Shell Differences
+- **Bash:** Bourne Again SHell, feature-rich.
+- **Dash:** Debian Almquist SHell, lighter and faster.
+- **Sh:** Bourne SHell, the original Unix shell.
+- **Ksh:** Korn SHell, combines features of sh and bash.
+
+## Variables and Input
+
+### Example 1: Declare Variables
+```bash
+name="John"
+echo "Hello, $name!"
 ```
 
-### **User Input**
-```sh
+### Example 2: Read User Input
+```bash
 echo "Enter your name:"
-read user_name
-echo "Welcome, $user_name!"
+read name
+echo "Hello, $name!"
 ```
 
-### **Comments**
-- **Single-line:** `# This is a comment`
-- **Multi-line:**  
-  ```sh
-  : '
-  This is a
-  multi-line comment
-  '
-  ```
-
----
-
-## **3. Control Structures**
-### **Conditional Statements**
-```sh
-#!/bin/bash
-echo "Enter a number:"
-read num
-
-if [ $num -gt 10 ]; then
-    echo "Number is greater than 10"
-else
-    echo "Number is 10 or less"
-fi
-```
-- `[ condition ]` or `[[ condition ]]` is used for conditions.
-- Operators:  
-  - `-eq` (equal), `-ne` (not equal)
-  - `-lt` (less than), `-gt` (greater than)
-  - `-le` (less than or equal), `-ge` (greater than or equal)
-
-### **Loops**
-#### **For Loop**
-```sh
-for i in 1 2 3 4 5
-do
-  echo "Iteration: $i"
-done
+### Example 3: Command-line Arguments
+```bash
+echo "First argument: $1"
+echo "All arguments: $@"
+echo "Total arguments: $#"
 ```
 
-#### **While Loop**
-```sh
-count=1
-while [ $count -le 5 ]
-do
-  echo "Count: $count"
-  count=$((count + 1))
-done
-```
+## Safety Measures for Using sudo in DevOps:
+1. **Least Privilege:** Grant only the necessary permissions.
+2. **Audit Logs:** Keep logs of sudo usage.
+3. **Time-bound Access:** Use sudo with time-bound permissions.
+4. **Secure Configuration:** Ensure `/etc/sudoers` is securely configured.
 
----
+## Linking in Linux
+- **Soft Link (Symbolic Link):** Points to another file by name. Can span filesystems.
+- **Hard Link:** Points directly to the inode of the file. Cannot span filesystems.
 
-## **4. Functions**
-Functions help in code reuse.
-```sh
-greet() {
-  echo "Hello, $1!"
-}
+## Chmod
+`chmod` changes file permissions. Permissions are divided into three categories:
+- **User (Owner)**
+- **Group**
+- **Others**
 
-greet "Alice"
-```
-- `$1` represents the first argument passed.
-
----
-
-## **5. File Handling**
-### **Check If a File Exists**
-```sh
-if [ -f "file.txt" ]; then
-  echo "File exists"
-else
-  echo "File does not exist"
-fi
-```
-
-### **Read a File Line by Line**
-```sh
-while read line; do
-  echo "Line: $line"
-done < file.txt
-```
-
----
-
-## **6. Special Variables**
-| Variable | Description |
-|----------|-------------|
-| `$0` | Script name |
-| `$1, $2, ...` | Positional arguments |
-| `$#` | Number of arguments |
-| `$@` | All arguments |
-| `$$` | Process ID of the script |
-| `$?` | Exit status of the last command |
+### Permission Representation:
+- `4`: Read
+- `2`: Write
+- `1`: Execute
 
 Example:
-```sh
-echo "Script Name: $0"
-echo "First Argument: $1"
-echo "Number of Arguments: $#"
+```bash
+chmod 755 filename
+```
+This gives read, write, execute to the owner, and read and execute to the group and others.
+
+## Basic Commands
+- `pwd`: Print current working directory.
+- `mkdir`: Create a directory.
+- `ls -ltr`: List files in long format, sorted by modification time (reverse).
+- `cd`: Change directory.
+- `mv`: Move or rename files.
+- `cp`: Copy files.
+- `touch`: Create an empty file or update the timestamp.
+
+## Role of Shell Scripting in DevOps
+1. **Infra Maintenance:** Automate routine tasks.
+2. **Git Interaction:** Automate Git operations.
+3. **Configuration Management:** Automate configuration tasks.
+
+## Commands for System Health
+- `nproc`: Number of processing units available.
+- `free`: Display memory usage.
+- `top`: Display system processes.
+
+### Example Script to Check Node Health:
+```bash
+#!/bin/bash
+set -exo pipefail
+echo "CPU Cores: $(nproc)"
+echo "Memory Usage:"
+free -h
+echo "Top Processes:"
+top -b -n 1 | head -n 20
 ```
 
----
+## Debugging
+- `set -x`: Enables debug mode, printing each command before execution.
 
-## **7. Exit Status**
-Every command returns an exit status:
-- `0` → Success
-- `Non-zero` → Error
+### Example:
+```bash
+#!/bin/bash
+set -x
+echo "Debug mode is on"
+```
 
-Check the exit status:
-```sh
-mkdir test_directory
-if [ $? -eq 0 ]; then
-  echo "Directory created successfully"
+## Process Management
+- `ps -ef`: Lists all processes. Use `grep` to filter.
+
+### Example:
+```bash
+ps -ef | grep "amazon"
+```
+To fetch the process ID:
+```bash
+ps -ef | grep "amazon" | awk '{print $2}'
+```
+
+## Date and Echo
+Use command substitution:
+```bash
+echo "Today is $(date)"
+```
+
+## Awk Command
+Processes text.
+```bash
+ps -ef | grep amazon | awk '{print $2}'
+```
+
+## Set -e and Set -o Pipefail
+- `set -e`: Exit on error.
+- `set -o pipefail`: Exit on error in a pipeline.
+
+### Example:
+```bash
+#!/bin/bash
+set -exo pipefail
+false | true
+echo "This will not be printed"
+```
+
+## Curl vs Wget
+- **curl:** Supports more protocols, outputs to stdout.
+- **wget:** Supports recursive downloading, outputs to file.
+
+## Find Command
+Find files by name:
+```bash
+find /path/to/search -name "filename"
+```
+
+## If-Else and Loops
+### If-Else Example:
+```bash
+if [ "$1" == "hello" ]; then
+    echo "Hello World"
 else
-  echo "Failed to create directory"
+    echo "Goodbye"
 fi
 ```
 
----
-
-## **8. Scheduling Scripts**
-### **Using `cron` for Automation**
-Edit the cron jobs:
-```sh
-crontab -e
-```
-Example cron job to run a script every day at 8 AM:
-```
-0 8 * * * /path/to/myscript.sh
+### For Loop Example:
+```bash
+for i in {1..5}; do
+    echo "Number: $i"
+done
 ```
 
----
-
-## **9. Debugging Shell Scripts**
-Use `-x` to debug:
-```sh
-bash -x myscript.sh
+### While Loop Example:
+```bash
+count=1
+while [ $count -le 5 ]; do
+    echo "Count: $count"
+    count=$((count + 1))
+done
 ```
-Or add `set -x` inside the script.
 
----
+### Until Loop Example:
+```bash
+count=1
+until [ $count -gt 5 ]; do
+    echo "Count: $count"
+    count=$((count + 1))
+done
+```
 
-## **10. Advanced Topics**
-- **Piping and Redirection**
-  ```sh
-  ls -l | grep "myfile"
-  echo "Hello" > file.txt  # Overwrite
-  echo "World" >> file.txt  # Append
-  ```
-- **Process Management**
-  ```sh
-  ps aux | grep "bash"
-  kill -9 <PID>
-  ```
-- **Background Jobs**
-  ```sh
-  ./script.sh &
-  ```
+## Signals in Linux
+Common signals:
+1. `SIGINT`: Interrupt (Ctrl+C)
+2. `SIGTERM`: Termination
+3. `SIGKILL`: Kill
+4. `SIGHUP`: Hangup
+5. `SIGSTOP`: Stop
 
----
-
-## **Conclusion**
-Shell scripting is powerful for automating tasks, managing files, and handling system operations. Mastering it will help you efficiently manage servers, automate processes, and execute commands efficiently.
+### Trap Example:
+```bash
+trap "rm -rf *" SIGINT
+```
+This script will delete all files in the current directory if interrupted.
 
